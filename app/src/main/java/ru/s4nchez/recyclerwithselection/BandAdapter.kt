@@ -4,12 +4,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_simple.view.*
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_simple.*
 
 class BandAdapter(private val listener: OnItemClickListener) : RecyclerView.Adapter<BandAdapter.BandHolder>() {
 
     private var items = ArrayList<Band>()
-    private var selectedItem: Band? = null
+    private var selectedItemPosition: Int? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BandHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_simple, parent, false)
@@ -19,34 +20,42 @@ class BandAdapter(private val listener: OnItemClickListener) : RecyclerView.Adap
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: BandHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(items[position], position == selectedItemPosition)
     }
 
     fun setItems(newItems: List<Band>) {
         items = ArrayList(newItems)
+        selectedItemPosition?.let { selectedItemPosition = 0 }
         notifyDataSetChanged()
     }
 
-    fun setSelectedItem(item: Band) {
-        this.selectedItem = item
+    fun setSelectedItem(position: Int) {
+        val oldPosition = selectedItemPosition
+        selectedItemPosition = position
+        oldPosition?.let { notifyItemChanged(it) }
+        notifyItemChanged(position)
     }
 
-    inner class BandHolder(itemView: View, listener: OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
+    inner class BandHolder(
+            override val containerView: View,
+            listener: OnItemClickListener
+    ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         private var band: Band? = null
 
         init {
-            itemView.setOnClickListener { v ->
-                band?.let {
-                    setSelectedItem(it)
-                    listener.onClick(it)
+            itemView.setOnClickListener {
+                band?.let { band ->
+                    setSelectedItem(adapterPosition)
+                    listener.onClick(band)
                 }
             }
         }
 
-        fun bind(band: Band) {
+        fun bind(band: Band, isSelected: Boolean) {
             this.band = band
-            itemView.label_view.text = band.label
+            label_view.text = band.label
+            checkbox.isChecked = isSelected
         }
     }
 
