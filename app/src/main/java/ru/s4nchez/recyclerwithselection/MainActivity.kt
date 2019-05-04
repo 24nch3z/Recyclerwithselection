@@ -5,14 +5,14 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), BandAdapter.OnItemClickListener {
+class MainActivity : AppCompatActivity(), SingleChooseBandAdapter.OnItemClickListener {
 
-    private var adapter: BandAdapter? = null
+    private var adapter: SingleChooseBandAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        adapter = BandAdapter(this)
+        adapter = SingleChooseBandAdapter(this)
         recycler_view.adapter = adapter
         recycler_view.addItemDecoration(BoundaryMarginsItemDecorator(pxFromDp(16f), 0))
         adapter?.setItems(Bands.list)

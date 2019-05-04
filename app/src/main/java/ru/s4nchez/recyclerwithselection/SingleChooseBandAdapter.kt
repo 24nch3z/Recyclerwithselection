@@ -6,15 +6,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_simple.*
+import ru.s4nchez.recyclerwithselection.adapter.ChooseAdapterListener
 
-class BandAdapter(private val listener: OnItemClickListener) : RecyclerView.Adapter<BandAdapter.BandHolder>() {
+class SingleChooseBandAdapter(
+        private val listener: OnItemClickListener
+) : RecyclerView.Adapter<SingleChooseBandAdapter.BandHolder>(), ChooseAdapterListener {
 
     private var items = ArrayList<Band>()
     private var selectedItemPosition: Int? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BandHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_simple, parent, false)
-        return BandHolder(view, listener)
+        return BandHolder(view, listener, this)
     }
 
     override fun getItemCount() = items.size
@@ -29,7 +32,7 @@ class BandAdapter(private val listener: OnItemClickListener) : RecyclerView.Adap
         notifyDataSetChanged()
     }
 
-    fun setSelectedItem(position: Int) {
+    override fun selectItem(position: Int) {
         val oldPosition = selectedItemPosition
         selectedItemPosition = position
         oldPosition?.let { notifyItemChanged(it) }
@@ -38,16 +41,17 @@ class BandAdapter(private val listener: OnItemClickListener) : RecyclerView.Adap
 
     inner class BandHolder(
             override val containerView: View,
-            listener: OnItemClickListener
+            itemClickListener: OnItemClickListener,
+            chooseAdapterListener: ChooseAdapterListener
     ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
         private var band: Band? = null
 
         init {
-            itemView.setOnClickListener {
+            containerView.setOnClickListener {
                 band?.let { band ->
-                    setSelectedItem(adapterPosition)
-                    listener.onClick(band)
+                    chooseAdapterListener.selectItem(adapterPosition)
+                    itemClickListener.onClick(band)
                 }
             }
         }
