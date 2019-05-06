@@ -33,5 +33,5 @@ abstract class ChoiceHolder<T>(containerView: View) : RecyclerView.ViewHolder(co
         this.item = item
     }
 
-    abstract fun bind(item: T, isSelected: Boolean)
+    abstract fun bind(item: T, isSelected: Boolean, chooseType: SingleChoiceAdapter.ChoiceType)
 }

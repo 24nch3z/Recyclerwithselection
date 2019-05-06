@@ -10,9 +10,9 @@ import ru.s4nchez.recyclerwithselection.adapter.OnItemClickListener
 import ru.s4nchez.recyclerwithselection.adapter.SingleChoiceAdapter
 import ru.s4nchez.recyclerwithselection.data.Band
 
-class TestSingleChoiceBandAdapter(
+class SingleChoiceBandAdapter(
         private val onItemClickListener: OnItemClickListener<Band>
-) : SingleChoiceAdapter<Band, TestSingleChoiceBandAdapter.BandViewHolder>() {
+) : SingleChoiceAdapter<Band, SingleChoiceBandAdapter.BandViewHolder>() {
 
     override fun generateViewHolder(parent: ViewGroup, viewType: Int): BandViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_simple, parent, false)
@@ -23,8 +23,14 @@ class TestSingleChoiceBandAdapter(
 
     class BandViewHolder(override val containerView: View) : ChoiceHolder<Band>(containerView), LayoutContainer {
 
-        override fun bind(item: Band, isSelected: Boolean) {
+        override fun bind(item: Band, isSelected: Boolean, chooseType: SingleChoiceAdapter.ChoiceType) {
             label_view.text = item.label
+
+            if (chooseType == ChoiceType.NOTHING) {
+                checkbox.visibility = View.GONE
+            } else {
+                checkbox.visibility = View.VISIBLE
+            }
             checkbox.isChecked = isSelected
         }
     }
