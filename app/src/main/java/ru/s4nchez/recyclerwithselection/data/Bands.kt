@@ -1,6 +1,10 @@
-package ru.s4nchez.recyclerwithselection
+package ru.s4nchez.recyclerwithselection.data
 
 object Bands {
+
+    val one = listOf(Band("Led Zeppelin"))
+
+    val two = listOf(Band("Led Zeppelin"), Band("The Beatles"))
 
     val list = listOf(
             Band("Led Zeppelin"),
